@@ -14,7 +14,7 @@ pipeline {
                script { 
                sh 'docker images -a'
                sh 'cd elasticsearch/'
-               sh 'docker build -t elasticsearch:1.0 .'
+               sh 'docker build -t elasticsearch:latest --build-arg ELASTIC_VERSION=1.0 .'
                sh 'docker images -a'
                sh 'cd ..'
                }
