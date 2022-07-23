@@ -7,5 +7,29 @@ pipeline {
             echo "$GIT_BRANCH"
          }
        }
+      
+      stage('Build Stage') {
+            steps {
+            echo 'Building..'
+               script { 
+               sh 'docker images -a'
+               sh 'cd elasticsearch/'
+               sh 'docker build -t elasticsearch:1.0 .'
+               sh 'docker images -a'
+               sh 'cd ..'
+               }
+            }
+        }
+      
+      stage('Test Stage') {
+            steps {
+                echo 'Testing..'
+            }
+        }
+      stage('Deploy Stage') {
+            steps {
+                echo 'Deploying....'
+            }
+        }
    }
 }
