@@ -14,9 +14,9 @@ pipeline {
             steps {
             echo 'Building..'
             script { 
-            sh 'mvn clean install -f elasticsearch/pom.xml'
-            sh 'mvn clean install -f kibana/pom.xml'
-            sh 'mvn clean install -f logstash/pom.xml'
+            sh 'docker build -t elasticsearch:latest --build-arg ELASTIC_VERSION=1.0 .'
+            sh 'mvn clean install -f kibana:latest --build-arg ELASTIC_VERSION=1.0 .'
+            sh 'mvn clean install -f logstash:latest --build-arg ELASTIC_VERSION=1.0 .'
                }
             }
         }
