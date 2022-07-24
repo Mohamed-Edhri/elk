@@ -1,6 +1,8 @@
 pipeline {
    agent any
-
+   tools{
+      maven 'Maven3.8.6'
+   }
    stages {
       stage('Verify Branch') {
          steps {
@@ -11,12 +13,10 @@ pipeline {
       stage('Build Stage') {
             steps {
             echo 'Building..'
-               script { 
-               sh 'docker images -a'
-               sh 'cd /elasticsearch'
-               sh 'docker build -t elasticsearch:latest --build-arg ELASTIC_VERSION=8.3.1 .'
-               sh 'docker images -a'
-               sh 'cd ..'
+            script { 
+            sh 'mvn clean install -f elasticsearch/pom.xml'
+            sh 'mvn clean install -f kibana/pom.xml'
+            sh 'mvn clean install -f logstash/pom.xml'
                }
             }
         }
