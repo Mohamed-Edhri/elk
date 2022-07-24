@@ -3,12 +3,26 @@ pipeline {
    tools{
       maven 'Maven3.8.6'
    }
+   
+   environment {
+       registryName = 'edhriacr2022'
+       registryUrl = 'edhriacr2022.azurecr.io'
+       registryCredential = 'ACR'
+       dockerImage = ''
+    }
+    
    stages {
       stage('Verify Branch') {
          steps {
             echo "$GIT_BRANCH"
          }
        }
+      
+      stage('Test Stage') {
+            steps {
+                echo 'Testing..'
+            }
+        }
       
       stage('Build Stage') {
             steps {
@@ -21,11 +35,19 @@ pipeline {
             }
         }
       
-      stage('Test Stage') {
-            steps {
-                echo 'Testing..'
-            }
+     stage('Upload Image to ACR') {
+     steps{   
+         script {
+           docker.withRegistry( "http://${registryUrl}", registryCredential ) {
+           dockerImage.push()
+           // sh 'docker push edhriacr2022.azurecr.io/shopfront:1.0'
+           // docker tag shopfront:1.0 edhriacr2022.azurecr.io/shopfront:1.0
+         // docker push edhriacr2022.azurecr.io/shopfront:1.0
         }
+      }
+    }
+      
+      
       stage('Deploy Stage') {
             steps {
                 echo 'Deploying....'
