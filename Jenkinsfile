@@ -40,7 +40,7 @@ pipeline {
             echo 'Pushing..'
             sh 'docker login --username edhriacr2022 --password uUqzNWODMutvpcWpFcK2/zvEqT5AMsM4 edhriacr2022.azurecr.io'
             sh 'docker tag elasticsearch edhriacr2022.azurecr.io/elasticsearch:8.3.2'
-            sh 'docker push httpd edhriacr2022.azurecr.io/elasticsearch:8.3.2'   
+            sh 'docker push edhriacr2022.azurecr.io/elasticsearch:8.3.2'   
       }
     }
       
