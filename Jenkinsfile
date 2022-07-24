@@ -37,10 +37,20 @@ pipeline {
       
       stage('Push Docker Images to ACR') {
       steps{
-            echo 'Pushing..'
+            echo 'loggin to Azure Container registry..'
             sh 'docker login --username edhriacr2022 --password uUqzNWODMutvpcWpFcK2/zvEqT5AMsM4 edhriacr2022.azurecr.io'
+         
+            echo 'Pushing elasticsearch image to azure container registry...'
             sh 'docker tag elasticsearch edhriacr2022.azurecr.io/elasticsearch:8.3.2'
-            sh 'docker push edhriacr2022.azurecr.io/elasticsearch:8.3.2'   
+            sh 'docker push edhriacr2022.azurecr.io/elasticsearch:8.3.2'
+         
+            echo 'Pushing kibana image to azure container registry..'
+            sh 'docker tag kibana edhriacr2022.azurecr.io/kibana:8.3.2'
+            sh 'docker push edhriacr2022.azurecr.io/kibana:8.3.2'
+            
+            echo 'Pushing logstash docker image to azure container registry..'
+            sh 'docker tag logstash edhriacr2022.azurecr.io/logstash:8.3.2'
+            sh 'docker push edhriacr2022.azurecr.io/logstash:8.3.2'   
       }
     }
       
