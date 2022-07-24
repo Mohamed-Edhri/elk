@@ -15,8 +15,8 @@ pipeline {
             echo 'Building..'
             script { 
             sh 'docker build -t elasticsearch:latest --build-arg ELASTIC_VERSION=8.3.1 -f elasticsearch/Dockerfile .'
-            sh 'docker build -f kibana:latest --build-arg ELASTIC_VERSION=8.3.1 kibana/Dockerfile .'
-            sh 'docker build -f logstash:latest --build-arg ELASTIC_VERSION=8.3.1 logstash/Dockerfile .'
+            sh 'docker build -f kibana:latest --build-arg ELASTIC_VERSION=8.3.1 -f kibana/Dockerfile .'
+            sh 'docker build -f logstash:latest --build-arg ELASTIC_VERSION=8.3.1 -f logstash/Dockerfile .'
                }
             }
         }
