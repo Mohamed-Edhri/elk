@@ -13,7 +13,7 @@ pipeline {
             echo 'Building..'
                script { 
                sh 'docker images -a'
-               //sh 'cd elasticsearch/'
+               sh 'cd /var/lib/jenkins/workspace/Elastic_Stack_App_qa/elasticsearch'
                sh 'docker build -t elasticsearch:latest --build-arg ELASTIC_VERSION=8.3.1 .'
                sh 'docker images -a'
                sh 'cd ..'
