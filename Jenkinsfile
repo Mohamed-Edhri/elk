@@ -35,15 +35,12 @@ pipeline {
             }
         }
       
-     stage('Upload Image to ACR') {
-     steps{   
-         script {
-           docker.withRegistry( "http://${registryUrl}", registryCredential ) {
-           dockerImage.push()
-           // sh 'docker push edhriacr2022.azurecr.io/shopfront:1.0'
-           // docker tag shopfront:1.0 edhriacr2022.azurecr.io/shopfront:1.0
-         // docker push edhriacr2022.azurecr.io/shopfront:1.0
-        }
+      stage('Push Docker Images to ACR') {
+      steps{
+            echo 'Pushing..'
+            sh 'docker login --username edhriacr2022 --password uUqzNWODMutvpcWpFcK2/zvEqT5AMsM4 edhriacr2022.azurecr.io'
+            sh 'docker tag elasticsearch edhriacr2022.azurecr.io/elasticsearch:8.3.2'
+            sh 'docker push httpd edhriacr2022.azurecr.io/elasticsearch:8.3.2'   
       }
     }
       
