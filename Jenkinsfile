@@ -60,9 +60,8 @@ pipeline {
                 echo 'Deploying App to Kubernetes..'
                    script {
                        kubernetesDeploy(configs: "deployment.yml", kubeconfigId: "kubernetes")
-                    }
-              }
-            }
+                         }
+                  }
         }
    }
 }
