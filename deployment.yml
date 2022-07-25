@@ -34,7 +34,7 @@ spec:
           value: -Xms512m -Xmx512m
         - name: bootstrap.memory_lock
           value: "false"
-        image: elasticsearch:6.5.0
+        image: edhriacr2022.azurecr.io/elasticsearch:8.3.2
         imagePullPolicy: IfNotPresent
         name: elasticsearch
         ports:
