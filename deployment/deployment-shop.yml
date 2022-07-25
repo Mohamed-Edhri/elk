@@ -30,7 +30,7 @@ metadata:
   namespace: paas
   name: ms-shop
 spec:
-  type: LoadBalancer
+ 
   selector:
     app: ui
   ports:
