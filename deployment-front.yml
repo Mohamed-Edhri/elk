@@ -19,6 +19,7 @@ items:
         io.kompose.service: app
     status:
       loadBalancer: {}
+---
   - apiVersion: apps/v1
     kind: Deployment
     metadata:
