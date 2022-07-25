@@ -1,0 +1,377 @@
+apiVersion: v1
+items:
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f docker-compose.yml -o deployment-service.yml
+        kompose.version: 1.26.1 (a9d05d509)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: elasticsearch
+      name: elasticsearch
+    spec:
+      ports:
+        - name: "9200"
+          port: 9200
+          targetPort: 9200
+        - name: "9300"
+          port: 9300
+          targetPort: 9300
+      selector:
+        io.kompose.service: elasticsearch
+    status:
+      loadBalancer: {}
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f docker-compose.yml -o deployment-service.yml
+        kompose.version: 1.26.1 (a9d05d509)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: kibana
+      name: kibana
+    spec:
+      ports:
+        - name: "5601"
+          port: 5601
+          targetPort: 5601
+      selector:
+        io.kompose.service: kibana
+    status:
+      loadBalancer: {}
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f docker-compose.yml -o deployment-service.yml
+        kompose.version: 1.26.1 (a9d05d509)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: logstash
+      name: logstash
+    spec:
+      ports:
+        - name: "5044"
+          port: 5044
+          targetPort: 5044
+        - name: "5000"
+          port: 5000
+          targetPort: 5000
+        - name: 5000-udp
+          port: 5000
+          protocol: UDP
+          targetPort: 5000
+        - name: "9600"
+          port: 9600
+          targetPort: 9600
+      selector:
+        io.kompose.service: logstash
+    status:
+      loadBalancer: {}
+  - apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f docker-compose.yml -o deployment-service.yml
+        kompose.version: 1.26.1 (a9d05d509)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: elasticsearch
+      name: elasticsearch
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          io.kompose.service: elasticsearch
+      strategy:
+        type: Recreate
+      template:
+        metadata:
+          annotations:
+            kompose.cmd: kompose convert -f docker-compose.yml -o deployment-service.yml
+            kompose.version: 1.26.1 (a9d05d509)
+          creationTimestamp: null
+          labels:
+            io.kompose.network/elk: "true"
+            io.kompose.service: elasticsearch
+        spec:
+          containers:
+            - env:
+                - name: ELASTIC_PASSWORD
+                - name: ES_JAVA_OPTS
+                  value: -Xms512m -Xmx512m
+                - name: discovery.type
+                  value: single-node
+              image: elasticsearch
+              name: elasticsearch
+              ports:
+                - containerPort: 9200
+                - containerPort: 9300
+              resources: {}
+              volumeMounts:
+                - mountPath: /usr/share/elasticsearch/config/elasticsearch.yml
+                  name: elasticsearch-claim0
+                  readOnly: true
+                - mountPath: /usr/share/elasticsearch/data
+                  name: elasticsearch
+          restartPolicy: Always
+          volumes:
+            - name: elasticsearch-claim0
+              persistentVolumeClaim:
+                claimName: elasticsearch-claim0
+                readOnly: true
+            - name: elasticsearch
+              persistentVolumeClaim:
+                claimName: elasticsearch
+    status: {}
+  - apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: elasticsearch-claim0
+      name: elasticsearch-claim0
+    spec:
+      accessModes:
+        - ReadOnlyMany
+      resources:
+        requests:
+          storage: 100Mi
+    status: {}
+  - apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: elasticsearch
+      name: elasticsearch
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 100Mi
+    status: {}
+  - apiVersion: networking.k8s.io/v1
+    kind: NetworkPolicy
+    metadata:
+      creationTimestamp: null
+      name: elk
+    spec:
+      ingress:
+        - from:
+            - podSelector:
+                matchLabels:
+                  io.kompose.network/elk: "true"
+      podSelector:
+        matchLabels:
+          io.kompose.network/elk: "true"
+  - apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f docker-compose.yml -o deployment-service.yml
+        kompose.version: 1.26.1 (a9d05d509)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: kibana
+      name: kibana
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          io.kompose.service: kibana
+      strategy:
+        type: Recreate
+      template:
+        metadata:
+          annotations:
+            kompose.cmd: kompose convert -f docker-compose.yml -o deployment-service.yml
+            kompose.version: 1.26.1 (a9d05d509)
+          creationTimestamp: null
+          labels:
+            io.kompose.network/elk: "true"
+            io.kompose.service: kibana
+        spec:
+          containers:
+            - env:
+                - name: KIBANA_SYSTEM_PASSWORD
+              image: kibana
+              name: kibana
+              ports:
+                - containerPort: 5601
+              resources: {}
+              volumeMounts:
+                - mountPath: /usr/share/kibana/config/kibana.yml
+                  name: kibana-claim0
+                  readOnly: true
+          restartPolicy: Always
+          volumes:
+            - name: kibana-claim0
+              persistentVolumeClaim:
+                claimName: kibana-claim0
+                readOnly: true
+    status: {}
+  - apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: kibana-claim0
+      name: kibana-claim0
+    spec:
+      accessModes:
+        - ReadOnlyMany
+      resources:
+        requests:
+          storage: 100Mi
+    status: {}
+  - apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f docker-compose.yml -o deployment-service.yml
+        kompose.version: 1.26.1 (a9d05d509)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: logstash
+      name: logstash
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          io.kompose.service: logstash
+      strategy:
+        type: Recreate
+      template:
+        metadata:
+          annotations:
+            kompose.cmd: kompose convert -f docker-compose.yml -o deployment-service.yml
+            kompose.version: 1.26.1 (a9d05d509)
+          creationTimestamp: null
+          labels:
+            io.kompose.network/elk: "true"
+            io.kompose.service: logstash
+        spec:
+          containers:
+            - env:
+                - name: LOGSTASH_INTERNAL_PASSWORD
+                - name: LS_JAVA_OPTS
+                  value: -Xms256m -Xmx256m
+              image: logstash
+              name: logstash
+              ports:
+                - containerPort: 5044
+                - containerPort: 5000
+                - containerPort: 5000
+                  protocol: UDP
+                - containerPort: 9600
+              resources: {}
+              volumeMounts:
+                - mountPath: /usr/share/logstash/config/logstash.yml
+                  name: logstash-claim0
+                  readOnly: true
+                - mountPath: /usr/share/logstash/pipeline
+                  name: logstash-claim1
+                  readOnly: true
+          restartPolicy: Always
+          volumes:
+            - name: logstash-claim0
+              persistentVolumeClaim:
+                claimName: logstash-claim0
+                readOnly: true
+            - name: logstash-claim1
+              persistentVolumeClaim:
+                claimName: logstash-claim1
+                readOnly: true
+    status: {}
+  - apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: logstash-claim0
+      name: logstash-claim0
+    spec:
+      accessModes:
+        - ReadOnlyMany
+      resources:
+        requests:
+          storage: 100Mi
+    status: {}
+  - apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: logstash-claim1
+      name: logstash-claim1
+    spec:
+      accessModes:
+        - ReadOnlyMany
+      resources:
+        requests:
+          storage: 100Mi
+    status: {}
+  - apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f docker-compose.yml -o deployment-service.yml
+        kompose.version: 1.26.1 (a9d05d509)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: setup
+      name: setup
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          io.kompose.service: setup
+      strategy:
+        type: Recreate
+      template:
+        metadata:
+          annotations:
+            kompose.cmd: kompose convert -f docker-compose.yml -o deployment-service.yml
+            kompose.version: 1.26.1 (a9d05d509)
+          creationTimestamp: null
+          labels:
+            io.kompose.network/elk: "true"
+            io.kompose.service: setup
+        spec:
+          containers:
+            - env:
+                - name: ELASTIC_PASSWORD
+                - name: KIBANA_SYSTEM_PASSWORD
+                - name: LOGSTASH_INTERNAL_PASSWORD
+              image: setup
+              name: setup
+              resources: {}
+              volumeMounts:
+                - mountPath: /state
+                  name: setup
+          restartPolicy: Always
+          volumes:
+            - name: setup
+              persistentVolumeClaim:
+                claimName: setup
+    status: {}
+  - apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: setup
+      name: setup
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 100Mi
+    status: {}
+kind: List
+metadata: {}
