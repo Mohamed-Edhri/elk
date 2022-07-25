@@ -1,6 +1,6 @@
 pipeline {    
     options { skipDefaultCheckout() }
-    agent {label 'vm1'}  
+    agent any  
     stages {
         stage('BUILD & Push Image') {
             steps{
