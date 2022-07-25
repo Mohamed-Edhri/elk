@@ -1,0 +1,59 @@
+pipeline {    
+    options { skipDefaultCheckout() }
+    agent any  
+    stages {
+        stage('BUILD & Push Image') {
+            steps{
+                checkout scm
+
+                echo "#################### Starting ...  #################"
+                echo "#################### Build Image  ms-frontend  #################"
+                sh '''  
+                        docker build -t ms-frontend:1.0 frontend
+                       
+
+                '''
+                echo "#################### Tag & Push Image ms-frontend to azurecr.io #################"
+                sh '''  
+                        
+                        docker tag ms-frontend:1.0 edhriacr2022.azurecr.io/ms-frontend:1.0
+                        docker push edhriacr2022.azurecr.io/ms-frontend:1.0
+
+                '''
+                echo "#################################"
+                echo "#################### Build Image products #################"
+                sh '''  
+                        docker build -t ms-products:1.0 products
+                        
+                '''
+                echo "#################### Tag & Push Image products #################"
+                sh '''  
+                        docker tag ms-products:1.0 edhriacr2022.azurecr.io/ms-products:1.0
+                        docker push edhriacr2022.azurecr.io/ms-products:1.0
+                '''
+                 echo "#################################"
+                echo "#################### Build Image shopping-cart #################"
+                sh '''  
+                        docker build -t ms-shopping-cart:1.0 shopping-cart
+                        
+
+                '''
+                echo "#################### Tag & Push Image shopping-cart #################"
+                sh '''  
+                        
+                        docker tag ms-shopping-cart:1.0 edhriacr2022.azurecr.io/ms-shopping-cart:1.0
+                        docker push edhriacr2022.azurecr.io/ms-shopping-cart:1.0
+
+                '''
+             
+                
+
+                
+
+                
+            } 
+        } 
+    }
+        
+}
+  
