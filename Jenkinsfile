@@ -12,12 +12,7 @@ pipeline {
          }
        }
       
-      stage('Test Stage ') {
-            steps {
-                echo 'Testing..'
-            }
-        }
-      
+           
       stage(' Build Stage ') {
             steps {
             echo 'Building Images..'
@@ -26,6 +21,12 @@ pipeline {
             sh 'docker build -t ms-products:1.0 products'
             sh 'docker build -t ms-shopping-cart:1.0 shopping-cart'
                }
+            }
+        }
+
+      stage('Test Stage ') {
+            steps {
+                echo 'Testing..'
             }
         }
       
