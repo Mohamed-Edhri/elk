@@ -16,8 +16,8 @@ pipeline {
                 echo "#################### Tag & Push Image ms-frontend to azurecr.io #################"
                 sh '''  
                         
-                        docker tag ms-frontend:1.0 regipaas.azurecr.io/ms-frontend:1.0
-                        docker push regipaas.azurecr.io/ms-frontend:1.0
+                        docker tag ms-frontend:1.0 edhriacr2022.azurecr.io/ms-frontend:1.0
+                        docker push edhriacr2022.azurecr.io/ms-frontend:1.0
 
                 '''
                 echo "#################################"
@@ -28,8 +28,8 @@ pipeline {
                 '''
                 echo "#################### Tag & Push Image products #################"
                 sh '''  
-                        docker tag ms-products:1.0 regipaas.azurecr.io/ms-products:1.0
-                        docker push regipaas.azurecr.io/ms-products:1.0
+                        docker tag ms-products:1.0 edhriacr2022.azurecr.io/ms-products:1.0
+                        docker push edhriacr2022.azurecr.io/ms-products:1.0
                 '''
                  echo "#################################"
                 echo "#################### Build Image shopping-cart #################"
@@ -41,8 +41,8 @@ pipeline {
                 echo "#################### Tag & Push Image shopping-cart #################"
                 sh '''  
                         
-                        docker tag ms-shopping-cart:1.0 regipaas.azurecr.io/ms-shopping-cart:1.0
-                        docker push regipaas.azurecr.io/ms-shopping-cart:1.0
+                        docker tag ms-shopping-cart:1.0 edhriacr2022.azurecr.io/ms-shopping-cart:1.0
+                        docker push edhriacr2022.azurecr.io/ms-shopping-cart:1.0
 
                 '''
              
