@@ -15,7 +15,7 @@ pipeline {
            
       stage(' Build Stage ') {
             steps {
-            echo 'docker images -a'
+            sh 'docker images -a'
             script { 
             sh 'docker build -t ms-frontend:1.0 frontend'
             sh 'docker build -t ms-products:1.0 products'
