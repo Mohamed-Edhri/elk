@@ -18,6 +18,7 @@ pipeline {
             echo "$GIT_BRANCH"
          }
        }
+   }
    
       
            
@@ -28,7 +29,7 @@ pipeline {
             sh 'docker build -t ms-frontend:1.0 frontend'
             sh 'docker build -t ms-products:1.0 products'
             sh 'docker build -t ms-shopping-cart:1.0 shopping-cart'
-            //sh 'docker build -t aquasec/trivy image python:3.4-alpine'
+         
             
                }
             }
@@ -71,7 +72,7 @@ pipeline {
             docker tag ms-shopping-cart:1.0 edhriacr2022.azurecr.io/ms-shopping-cart:1.0
             docker push edhriacr2022.azurecr.io/ms-shopping-cart:1.0
 
-            docker build -t ms-docker run aquasec/trivy image python:3.4-alpine'
+            
 
             '''
       }
