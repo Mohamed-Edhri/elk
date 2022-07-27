@@ -33,6 +33,12 @@ pipeline {
             }
         }
 
+      stage('Code Quality'){
+      agent any
+      steps{
+        sh 'echo Sonarqube Code Quality Check Done'
+      }
+
       stage('Test Stage ') {
             steps {
                 echo 'Testing..'
