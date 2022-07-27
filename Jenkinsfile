@@ -2,14 +2,7 @@ pipeline {
 
    agent any
   
-   tools{
-      maven 'Maven3.8.6'
-   }
-
-   environment {
-            PATH= "$PATH:/usr/share/maven"
-   }
-    
+  
    stages {
       stage(' Verify Branch ') {
            
@@ -45,10 +38,7 @@ pipeline {
       stage('Test Stage ') {
             steps {
                 echo 'Testing..'
-            
-
-
-            }
+               }
         }
       
       stage('Tag & Push docker images to ACR') {
@@ -70,9 +60,7 @@ pipeline {
          
             echo 'Pushing shopping-cart docker image to azure container registry..'
             docker tag ms-shopping-cart:1.0 edhriacr2022.azurecr.io/ms-shopping-cart:1.0
-            docker push edhriacr2022.azurecr.io/ms-shopping-cart:1.0
-
-            
+            docker push edhriacr2022.azurecr.io/ms-shopping-cart:1.0          
 
             '''
       }
@@ -88,6 +76,4 @@ pipeline {
                          }
                   }
         }
-   }
-
-
+}
