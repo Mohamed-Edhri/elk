@@ -38,6 +38,7 @@ pipeline {
       steps{
         sh 'echo Sonarqube Code Quality Check Done'
       }
+      }
 
       stage('Test Stage ') {
             steps {
