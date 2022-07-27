@@ -18,6 +18,7 @@ pipeline {
             echo "$GIT_BRANCH"
          }
        }
+   }
       
            
       stage(' Build Stage ') {
